@@ -14,6 +14,7 @@ package lesson3;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
@@ -23,7 +24,30 @@ public class Main {
     }
 
     private static void readPageByPageLargeTextFile() {
+        File file10MbText = new File("src\\main\\resources\\10MbFile.txt");
+        int pageSize = 1800;
 
+        try (RandomAccessFile raf = new RandomAccessFile(file10MbText, "r")) {
+            long pageCount = (long) Math.ceil((double) raf.length() / pageSize);
+            System.out.printf("Введите номер страницы (всего страниц: %d): ", pageCount);
+
+            Scanner scn = new Scanner(System.in);
+            int page = scn.nextInt();
+
+            if (page <= 0 && pageCount < page) {
+                System.out.println("Введенный номер страницы вне диапазона.");
+                return;
+            }
+
+            raf.seek(pageSize * (page - 1));
+            byte[] buf = new byte[pageSize];
+
+            int readCount = raf.read(buf, 0, pageSize);
+            System.out.print(new String(buf, 0, readCount, "UTF-8"));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void concat5filesInOne() {
