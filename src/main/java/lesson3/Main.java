@@ -11,14 +11,52 @@ package lesson3;
 // Контролируем время выполнения: программа не должна загружаться дольше 10 секунд,
 // а чтение – занимать свыше 5 секунд.
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class Main {
     public static void main(String[] args) {
-        read50byteFileAndSoutIt();
+//        read50byteFileAndSoutIt();
+        concat5filesInOne();
+    }
+
+    private static void concat5filesInOne() {
+        ArrayList<InputStream> ins = new ArrayList<>();
+
+        try {
+            ins.add(new FileInputStream("src\\main\\resources\\concatFiles\\concat1.txt"));
+            ins.add(new FileInputStream("src\\main\\resources\\concatFiles\\concat2.txt"));
+            ins.add(new FileInputStream("src\\main\\resources\\concatFiles\\concat3.txt"));
+            ins.add(new FileInputStream("src\\main\\resources\\concatFiles\\concat4.txt"));
+            ins.add(new FileInputStream("src\\main\\resources\\concatFiles\\concat5.txt"));
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        }
+
+        SequenceInputStream in = new SequenceInputStream(Collections.enumeration(ins));
+
+        File concatResultFile = new File("src\\main\\resources\\concatFiles\\concatResult.txt");
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(concatResultFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        byte[] buf = new byte[50];
+        int countRead;
+        try {
+            while (true) {
+                if (!((countRead = in.read(buf)) != -1)) break;
+                out.write(buf, 0, countRead);
+            }
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     static void read50byteFileAndSoutIt() {
@@ -29,9 +67,8 @@ public class Main {
             return;
         }
 
-        byte[] buf = new byte[50];
         try (FileInputStream in = new FileInputStream(file50bytes)) {
-            byte[] arr = new byte[512];
+            byte[] arr = new byte[50];
             int x;
             while ((x = in.read(arr)) > 0) {
                 System.out.print(new String(arr, 0, x, "UTF-8"));
