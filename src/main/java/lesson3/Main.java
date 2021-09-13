@@ -17,8 +17,13 @@ import java.util.Collections;
 
 public class Main {
     public static void main(String[] args) {
-//        read50byteFileAndSoutIt();
+        read50byteFileAndSoutIt();
         concat5filesInOne();
+        readPageByPageLargeTextFile();
+    }
+
+    private static void readPageByPageLargeTextFile() {
+
     }
 
     private static void concat5filesInOne() {
