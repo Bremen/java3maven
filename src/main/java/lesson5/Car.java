@@ -1,10 +1,13 @@
 package lesson5;
 
-import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Semaphore;
 
 public class Car implements Runnable {
     private static int CARS_COUNT;
-    public static CyclicBarrier cb;
+    public static CountDownLatch startFlag;
+    public static CountDownLatch finishFlag;
+
 
     static {
         CARS_COUNT = 0;
@@ -31,12 +34,32 @@ public class Car implements Runnable {
             System.out.println(this.name + " готовится");
             Thread.sleep(500 + (int)(Math.random() * 800));
             System.out.println(this.name + " готов");
-            cb.await();
+            startFlag.countDown();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        try {
+            startFlag.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         for (int i = 0; i < race.getStages().size(); i++) {
             race.getStages().get(i).go(this);
+        }
+
+        System.out.println(this.name + " финишировал");
+
+        if (race.winnerFlag.incrementAndGet() == 1) {
+            System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> " + this.name + " ВЫЙГРАЛ ГОНКУ!!!");
+        }
+
+        finishFlag.countDown();
+        try {
+            finishFlag.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
