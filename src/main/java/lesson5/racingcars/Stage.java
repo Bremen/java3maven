@@ -1,4 +1,6 @@
-package lesson5;
+package lesson5.racingcars;
+
+import lesson5.racingcars.Car;
 
 public abstract class Stage {
     protected int length;

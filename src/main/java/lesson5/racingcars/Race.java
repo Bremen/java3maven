@@ -1,4 +1,4 @@
-package lesson5;
+package lesson5.racingcars;
 
 import java.util.ArrayList;
 import java.util.Arrays;
