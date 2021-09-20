@@ -1,34 +1,30 @@
 package lesson5.mfumodel;
 
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class MFU {
-    private static final int SCAN_TIME = 5000;
-    private static final int PRINT_TIME = 6500;
+    private static final int SCAN_TIME = 500;
+    private static final int PRINT_TIME = 1500;
     private static final int COPY_TIME = SCAN_TIME + PRINT_TIME;
     private static final int EMAIL_TIME = 100;
 
-    private final ReentrantReadWriteLock scanPrintLock = new ReentrantReadWriteLock(false);
     private final ReentrantLock emailLock = new ReentrantLock();
-
-    private static String message = "a";
+    private final ReentrantLock scanLock = new ReentrantLock();
+    private final ReentrantLock printLock = new ReentrantLock();
 
     public static void main(String[] args) throws InterruptedException{
         MFU mfu = new MFU();
+        new Thread(mfu.new CopyAction()).start();
         new Thread(mfu.new ScanAction()).start();
         new Thread(mfu.new PrintAction()).start();
-
-//        new Thread(mfu.new EmailAction()).start();
-//        new Thread(mfu.new EmailAction()).start();
-//        new Thread(mfu.new EmailAction()).start();
-//        new Thread(mfu.new EmailAction()).start();
+        new Thread(mfu.new EmailAction()).start();
+        new Thread(mfu.new EmailAction()).start();
     }
 
     class ScanAction implements Runnable {
         public void run() {
             System.out.println("МФУ получило задание на сканирование.");
-            scanPrintLock.readLock().lock();
+            scanLock.lock();
             System.out.println("МФУ сканирует..");
             try {
                 Thread.sleep(SCAN_TIME);
@@ -36,13 +32,13 @@ public class MFU {
                 e.printStackTrace();
             }
             System.out.println("МФУ закончило сканирование.");
-            scanPrintLock.readLock().unlock();
+            scanLock.unlock();
         }
     }
     class PrintAction implements Runnable {
         public void run() {
             System.out.println("МФУ получило задание на печать.");
-            scanPrintLock.writeLock().lock();
+            printLock.lock();
             System.out.println("МФУ печатает..");
             try {
                 Thread.sleep(PRINT_TIME);
@@ -50,20 +46,27 @@ public class MFU {
                 e.printStackTrace();
             }
             System.out.println("МФУ закончило печать.");
-            scanPrintLock.writeLock().unlock();
+            printLock.unlock();
         }
     }
 
     class CopyAction implements Runnable {
         public void run() {
-            for(int i = 0; i<= 10; i ++) {
-                try {
-                    scanPrintLock.writeLock().lock();
-                    message = message.concat("b");
-                } finally {
-                    scanPrintLock.writeLock().unlock();
-                }
+            System.out.println("МФУ получило задание на копирование.");
+
+            while (printLock.isLocked() || scanLock.isLocked()) {}
+
+            printLock.lock();
+            scanLock.lock();
+            System.out.println("МФУ копирует..");
+            try {
+                Thread.sleep(COPY_TIME);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+            System.out.println("МФУ закончило копировать.");
+            printLock.unlock();
+            scanLock.unlock();
         }
     }
 
