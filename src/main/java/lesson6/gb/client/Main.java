@@ -13,8 +13,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        URL url = getClass().getResource("/src/main/java/lesson6/gb/client/client.fxml");
-        System.out.println(url);
+        URL url = getClass().getResource("/client.fxml");
+
+        System.out.println("URL " + url);
         Parent root = FXMLLoader.load(url);
         primaryStage.setTitle("2k18Chat");
         primaryStage.setScene(new Scene(root, 400, 400));
