@@ -13,11 +13,10 @@ public class ArrayContentCheckerTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
-                {new int[]{4,0,1}, new Boolean(true)},
-                {new int[]{1,4,2}, new Boolean(true)},
-                {new int[]{2,2,4}, new Boolean(false)},
-                {new int[]{4,4,6}, new Boolean(false)},
-                {new int[]{0,1,5}, new Boolean(false)},
+                {new int[]{1, 1, 4, 4}, true},
+                {new int[]{1, 1, 1, 1}, false},
+                {new int[]{4, 4, 4, 4}, false},
+                {new int[]{5, 4, 1, 0}, false},
         });
     }
 
@@ -30,7 +29,7 @@ public class ArrayContentCheckerTest {
     }
 
     @Test
-    public void checkContainsAtLeastOne1or4() {
-        Assert.assertEquals(answer, ArrayContentChecker.checkContainsAtLeastOne1or4(numbers));
+    public void checkContains1and4() {
+        Assert.assertEquals(answer, ArrayContentChecker.checkContains1and4(numbers));
     }
 }

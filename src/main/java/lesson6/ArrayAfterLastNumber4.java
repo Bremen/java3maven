@@ -21,6 +21,9 @@ public class ArrayAfterLastNumber4 {
     }
 
     private static int[] getSubArrayAfterLastNumber(int[] numbers, int number) throws RuntimeException{
+        if (numbers == null)
+            throw new RuntimeException("В передаваемом массиве не инициализирован!");
+
         int lastIndex = numbers.length - 1;
 
         while (lastIndex >= 0 && numbers[lastIndex] != number) lastIndex--;

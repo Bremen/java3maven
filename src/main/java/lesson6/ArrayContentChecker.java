@@ -2,24 +2,29 @@ package lesson6;
 
 public class ArrayContentChecker {
     public static void main(String[] args) {
-        System.out.println(checkContainsAtLeastOne1or4(new int[]{1, 2, 3, 4}));
-        System.out.println(checkContainsAtLeastOne1or4(new int[]{0, 2, 3, 4}));
-        System.out.println(checkContainsAtLeastOne1or4(new int[]{1, 2, 3, 0}));
-        System.out.println(checkContainsAtLeastOne1or4(new int[]{5, 2, 3, 0}));
+        System.out.println(checkContains1and4(new int[]{1, 1, 4, 4}));
+        System.out.println(checkContains1and4(new int[]{1, 1, 1, 1}));
+        System.out.println(checkContains1and4(new int[]{4, 4, 4, 4}));
+        System.out.println(checkContains1and4(new int[]{5, 4, 1, 0}));
     }
 
-    public static boolean checkContainsAtLeastOne1or4(int[] numbers) {
-        boolean isThereOne = false;
-        boolean isThereFour = false;
+    public static boolean checkContains1and4(int[] numbers) {
+        if (numbers == null) return false;
 
-        for (int i = 0; i < numbers.length && (!isThereOne || !isThereFour); i++) {
-            if (numbers[i] == 4)
-                isThereFour = true;
+        boolean hasFour = false;
+        boolean hasOne = false;
 
-            if (numbers[i] == 1)
-                isThereOne = true;
+        for (int number : numbers) {
+            if (number != 4 && number != 1)
+                return false;
+
+            if (!hasOne && number == 1)
+                hasOne = true;
+
+            if (!hasFour && number == 4)
+                hasFour = true;
         }
 
-        return isThereOne && isThereFour;
+        return hasOne && hasFour;
     }
 }
