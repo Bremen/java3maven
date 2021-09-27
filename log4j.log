@@ -1,0 +1,4 @@
+2021-09-24 21:57:41 INFO   file:22 - Сервер запущен. Ожидаем клиентов...
+2021-09-24 21:58:02 INFO   file:25 - Клиент подключился
+2021-09-24 21:58:02 WARN   file:39 - unsuccessful login attempt with username login1
+2021-09-24 21:59:28 WARN   file:39 - unsuccessful login attempt with username login1
